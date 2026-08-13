@@ -55,8 +55,8 @@ expected upper bound rather than a value measured on our own printed parts. Poin
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd <repo-name>
+git clone https://github.com/fMbodji/ERNIST.git
+cd ERNIST
 ```
 
 2. Install dependencies:
