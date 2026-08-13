@@ -1,0 +1,8 @@
+pandas
+numpy
+Pillow
+torch
+opencv-python
+matplotlib
+python-dotenv
+segment-anything @ git+https://github.com/facebookresearch/segment-anything.git

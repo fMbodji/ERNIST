@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# verify_point_on_mask.py output (regeneratable overlay images, not results data)
+verified/
+
+# local secrets, if any get added later
+.env
+
+# report/paper drafts - not ready to be public yet
+paper/
