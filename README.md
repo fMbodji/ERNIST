@@ -272,8 +272,7 @@ Each row of the results CSV includes:
 ## Current Scope / Known Limitations
 
 - Pilot-scale sample size: distance questions are further along (100+ scored) than the other
-  four categories (pointing is at low double digits; Action/Trajectory/State Estimation are
-  not yet built out as scored categories).
+  four categories.
 - Single model evaluated (Gemini Robotics-ER 1.6). No baseline or second-model comparison yet.
 - Single annotator for mask ground truth.
 - Two physical board setups tested so far.
