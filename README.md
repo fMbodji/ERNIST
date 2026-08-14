@@ -10,6 +10,14 @@ physical parts (rather than being measured after the fact or estimated), ground 
 to FDM print tolerance. Based on third-party testing of this printer class (Bambu Lab X1 Carbon), well-calibrated dimensional accuracy is typically reported in the ±0.1–0.2mm range; we treat this as an expected upper bound rather than a value measured on our own printed parts. 
 Pointing-task scoring extends the [Point-Arena](https://github.com/pointarena/pointarena) evaluation methodology (coordinate normalization convention, mask-based on/off scoring).
 
+## Why This Benchmark
+
+Most spatial-reasoning benchmarks for vision-language models test qualitative relations such as,
+("is A left of B") against approximate ground truth: crowd-drawn bounding boxes, model-estimated depth maps, or CAD scenes that were not designed to be manufacturable.
+That's usually fine for general visual common sense, but it doesn't answer the question that matters for deploying a VLM as a robot's perception layer: can it produce metric, tolerance-relevant estimates precise enough to drive an actual manipulation action? 
+Real assembly tasks like peg-in-hole insertion or pick-and-place run on millimeter-to-centimeter tolerances, not "near" vs. "far." 
+ERNIST's ground truth comes directly from the CAD specification used to fabricate the physical pegs and board, rather than being measured or estimated after the fact, so it's exact up to fabrication tolerance instead of approximate.
+
 ## Table of Contents
 
 - [Key Features](#key-features)
