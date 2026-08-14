@@ -2,18 +2,13 @@
 
 **Status: work in progress.** Built during my third NIST summer internship (Engineering
 Laboratory, Intelligent Systems Division, Cognition and Collaboration Systems Group). Not a
-finished, peer-reviewed benchmark release; numbers here are preliminary and evolving as more
-test data is collected.
+finished, peer-reviewed benchmark release; numbers here are preliminary and will be evolving as more test data is collected.
 
-A benchmark testing Gemini Robotics-ER 1.6 across five embodied and spatial reasoning
-categories (Distance/Spatial Reasoning, Action Reasoning, Trajectory Reasoning, Pointing,
-State Estimation), grounded in physical, CAD-designed, 3D-printed peg-in-hole objects rather
-than photographed or synthetically rendered scenes. Because ground-truth dimensions and
+A benchmark testing Gemini Robotics-ER 1.6 across five embodied reasoning categories (Spatial Reasoning, Action Reasoning, Trajectory Reasoning, Pointing, State Estimation), grounded in physical, CAD-designed, 3D-printed peg-in-hole objects. Because ground-truth dimensions and
 inter-peg spacing come directly from the CAD design specification used to fabricate the
-physical parts, rather than being measured after the fact or estimated, ground truth is exact
-to FDM print tolerance. Based on third-party testing of this printer class, well-calibrated
-dimensional accuracy is typically reported in the ±0.1–0.2mm range; we treat this as an
-expected upper bound rather than a value measured on our own printed parts. Pointing-task scoring extends the [Point-Arena](https://github.com/pointarena/pointarena) evaluation methodology (coordinate normalization convention, mask-based on/off scoring).
+physical parts (rather than being measured after the fact or estimated), ground truth is exact
+to FDM print tolerance. Based on third-party testing of this printer class (Bambu Lab X1 Carbon), well-calibrated dimensional accuracy is typically reported in the ±0.1–0.2mm range; we treat this as an expected upper bound rather than a value measured on our own printed parts. 
+Pointing-task scoring extends the [Point-Arena](https://github.com/pointarena/pointarena) evaluation methodology (coordinate normalization convention, mask-based on/off scoring).
 
 ## Table of Contents
 
@@ -35,7 +30,7 @@ expected upper bound rather than a value measured on our own printed parts. Poin
 - **CAD-exact ground truth**: pegs and pegboards designed in Fusion 360 with fully specified
   dimensions, then 3D printed; distances are computed from the CAD spec rather than measured
   post-hoc with calipers or estimated from a photo.
-- **Graded clue levels**: distance questions are generated at three levels of scale
+- **Graded clue levels**: distance questions are generated at multiple levels of scale
   information (0 = no clue, 1 = partial cue such as board hole spacing, 2 = full dimensional
   spec), so grounding-dependency can be isolated from raw spatial reasoning.
 - **Multi-view test setups**: the same physical board is photographed from multiple camera
@@ -80,21 +75,16 @@ wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 
 The pipeline works end to end like this:
 
-1. **Generate questions.** `distance_questions_generator.py` picks question types and clue
-   levels and produces a CSV of questions with computed ground truth (`Board`/`Peg`
-   dataclasses, Euclidean distance formulas, unit conversion).
+1. **Generate questions.** `distance_questions_generator.py` picks question types and produces a list of questions with computed ground truths 
 2. **Query the model.** Each question is tested against Gemini ER 1.6 (currently via Google
-   AI Studio).
-3. **Log results.** Responses are saved into the same CSV alongside question type, camera
-   view, and ground truth, with a `Residual Error` column (difference between ground truth
-   and Gemini's response) and a `Point-on-Mask?` column, both initially empty.
-4. **Score.** `evaluate_test_results.py` loads the CSV into a dataframe, calls
-   `find_missing_masks` to check whether every pointing question's ground-truth mask already
-   exists (and prints the exact `SAM_mask_generator.py` command to create any that are
-   missing), then calls either `get_residual_error` or `check_point_against_mask` per row
-   depending on the question type, fills in the two scoring columns, saves the scored CSV,
-   and prints summary statistics (mean/median error, 90th percentile for distance questions;
-   number and percentage on-mask for pointing questions).
+AI Studio).
+3. **Log results.** Responses are saved into the a CSV file (like the one under data/         Summary_Distance_Questions) which columns such as question type, camera view, and ground truth,   with a `Residual Error` column (difference between ground truth and Gemini's response) and a `Point-on-Mask?` column, both initially empty.
+4. **Score.** `evaluate_test_results.py` loads the CSV into a dataframe, call `find_missing_masks` to check whether every pointing question's ground-truth mask already
+exists (and prints the exact `SAM_mask_generator.py` command to create any that are
+missing), then calls either `get_residual_error` or `check_point_against_mask` per row
+depending on the question type, fills in the two scoring columns, saves the scored CSV,
+and prints summary statistics (mean/median error, 90th percentile for distance questions;
+number and percentage on-mask for pointing questions).
 
 If any pointing-question masks are missing, the script stops before scoring so you don't
 score against incomplete ground truth. Run the printed `SAM_mask_generator.py` commands, then
@@ -207,16 +197,11 @@ Distance questions: 103 scored
 Pointing questions: 12 scored, 66.7% on mask
 ```
 
-The "Label matched via fallback" lines show the layer-2 label matching kicking in: Gemini
-sometimes returns a verbose label like `"the smallest peg (D)"` instead of the bare `"D"`
-expected in ground truth. The evaluator falls back to a regex search for the expected label
-as a whole word inside the returned string before declaring a mismatch, so these still score
-as correct label matches rather than false negatives.
+The "Label matched via fallback" lines show the layer-2 label matching: Gemini sometimes returns a verbose label like `"the smallest peg (D)"` instead of the bare `"D"` expected in ground truth. The evaluator falls back to a regex search for the expected label as a whole word inside the returned string before declaring a mismatch, so these still score as correct label matches rather than false negatives.
 
 ## Project Structure
 
-All pipeline scripts live at the repo root (not under a `scripts/` folder), and `images/`,
-`masks/`, and `verified/` are separate top-level folders rather than nested under `images/`:
+All pipeline scripts live at the repo root, and `images/`, `masks/`, and `verified/` are separate top-level folders :
 
 ```
 distance_questions_generator.py   Generates distance/pointing questions from Board/Peg
@@ -241,7 +226,7 @@ requirements.txt                  Pinned/loose dependency list (see Requirements
 
 data/
   Summary_Distance_Questions.csv          Generated question set (unscored).
-  Summary_Distance_Questions_scored.csv   Same, with Residual Error / Point-on-Mask
+  Summary_Distance_Questions_scored.csv   Scored, with Residual Error / Point-on-Mask
                                            columns filled in.
 
 images/      Raw photographs of the physical pegboard, multiple camera views
