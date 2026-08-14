@@ -284,7 +284,7 @@ Each row of the results CSV includes:
 - Single annotator for mask ground truth.
 - Two physical board setups tested so far.
 
-## Attribution
+## Attribution/Citation
 
 This evaluation pipeline adapts the `model_evaluator` approach, SAM checkpoint, and
 segmentation utilities from [Point-Arena](https://github.com/pointarena/pointarena)
