@@ -14,24 +14,25 @@ Pointing-task scoring extends the [Point-Arena](https://github.com/pointarena/po
 
 Most spatial-reasoning benchmarks for vision-language models test qualitative relations such as,
 ("is A left of B") against approximate ground truth: crowd-drawn bounding boxes, model-estimated depth maps, or CAD scenes that were not designed to be manufacturable.
+
 That's usually fine for general visual common sense, but it doesn't answer the question that matters for deploying a VLM as a robot's perception layer: can it produce metric, tolerance-relevant estimates precise enough to drive an actual manipulation action? 
-Real assembly tasks like peg-in-hole insertion or pick-and-place run on millimeter-to-centimeter tolerances, not "near" vs. "far." 
-ERNIST's ground truth comes directly from the CAD specification used to fabricate the physical pegs and board, rather than being measured or estimated after the fact, so it's exact up to fabrication tolerance instead of approximate.
 
-## Table of Contents
+Real assembly tasks like peg-in-hole insertion or pick-and-place run on millimeter-to-centimeter tolerances, not "near" vs. "far." That's why ERNIST's ground truth comes directly from the CAD specification used to fabricate the physical pegs and board, rather than being measured or estimated after the fact, so it's exact up to fabrication tolerance instead of approximate.
 
-- [Key Features](#key-features)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Evaluation Pipeline](#evaluation-pipeline)
-  - [Example Run](#example-run)
-- [Project Structure](#project-structure)
-- [Task Categories](#task-categories)
-- [Data Format](#data-format)
-- [Current Scope / Known Limitations](#current-scope--known-limitations)
-- [Attribution](#attribution)
-- [Requirements](#requirements)
-- [License](#license)
+  ## Table of Contents
+
+  - [Key Features](#key-features)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Evaluation Pipeline](#evaluation-pipeline)
+    - [Example Run](#example-run)
+  - [Project Structure](#project-structure)
+  - [Task Categories](#task-categories)
+  - [Data Format](#data-format)
+  - [Current Scope / Known Limitations](#current-scope--known-limitations)
+  - [Citation/Attribution](#citation)
+  - [Requirements](#requirements)
+  - [License](#license)
 
 ## Key Features
 
@@ -277,7 +278,7 @@ Each row of the results CSV includes:
 - Single annotator for mask ground truth.
 - Two physical board setups tested so far.
 
-## Attribution/Citation
+## Citation
 
 This evaluation pipeline adapts the `model_evaluator` approach, SAM checkpoint, and
 segmentation utilities from [Point-Arena](https://github.com/pointarena/pointarena)
@@ -299,5 +300,10 @@ See `requirements.txt` for exact package list.
 
 ## License
 
-TBD, pending internal review. Do not redistribute without checking current status of this
-notice.
+All images, CAD designs, and 3D-printed objects in this repository are original, taken and
+created by us specifically for this project, nothing is scraped or reused from another
+dataset. 
+This pipeline does adapt code, a model checkpoint, and evaluation utilities from
+[Point-Arena](https://github.com/pointarena/pointarena) and
+[Segment Anything](https://github.com/facebookresearch/segment-anything) (see
+[Citation](#citation)) 
